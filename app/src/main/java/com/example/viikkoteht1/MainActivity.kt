@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +40,28 @@ class MainActivity : ComponentActivity() {
             HomeScreen()
         }
     }
+}
+
+@Composable
+fun TaskTextField(
+    task: String,
+    onTaskChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = task,
+        onValueChange = onTaskChange,
+        label = { Text("Task") },
+    )
+}
+
+@Composable
+fun DescriptionTextField(
+    description: String,
+    onDescriptionChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = description,
+        onValueChange = onDescriptionChange,
+        label = { Text("Description") },
+        )
 }
 
 @SuppressLint("SimpleDateFormat")
@@ -71,6 +95,28 @@ fun HomeScreen() {
 
         Spacer(Modifier.padding(8.dp))
 
+        var newTaskTitle by remember { mutableStateOf("New task ${tasklist.size + 1}") }
+        var newTaskDescription by remember { mutableStateOf("New task description") }
+
+        TaskTextField(task = newTaskTitle, onTaskChange = {newTaskTitle = it})
+        DescriptionTextField(description = newTaskDescription, onDescriptionChange = {newTaskDescription = it})
+
+        Button(onClick = {
+            val newTask = Task(
+                id = tasklist.size + 1,
+                title = newTaskTitle,
+                description = newTaskDescription,
+                priority = 1,
+                done = false,
+                dueDate = SimpleDateFormat("yyyy-MM-dd").format(System.currentTimeMillis())
+            )
+            tasklist = addTask(tasklist, newTask)
+        }) {
+            Text("Add task")
+        }
+
+        Spacer(Modifier.padding(8.dp))
+
         visibleTasks.forEach { task ->
             Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
@@ -84,22 +130,6 @@ fun HomeScreen() {
                         tasklist = toggleDone(tasklist, task.id)
                     })
             }
-        }
-
-        Spacer(Modifier.padding(8.dp))
-
-        Button(onClick = {
-            val newTask = Task(
-                id = tasklist.size + 1,
-                title = "New task ${tasklist.size + 1}",
-                description = "New task description",
-                priority = 1,
-                done = false,
-                dueDate = SimpleDateFormat("yyyy-MM-dd").format(System.currentTimeMillis())
-            )
-            tasklist = addTask(tasklist, newTask)
-        }) {
-            Text("Add task")
         }
     }
 }
