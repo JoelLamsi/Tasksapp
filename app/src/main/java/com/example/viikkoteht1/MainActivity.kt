@@ -1,6 +1,5 @@
 package com.example.viikkoteht1
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,7 +29,6 @@ import com.example.viikkoteht1.domain.filterByDone
 import com.example.viikkoteht1.domain.mockTasks
 import com.example.viikkoteht1.domain.sortByDueDate
 import com.example.viikkoteht1.domain.toggleDone
-import java.text.SimpleDateFormat
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +62,6 @@ fun DescriptionTextField(
         )
 }
 
-@SuppressLint("SimpleDateFormat")
 @Composable
 fun HomeScreen() {
     var tasklist by remember { mutableStateOf(mockTasks) }
@@ -108,7 +105,7 @@ fun HomeScreen() {
                 description = newTaskDescription,
                 priority = 1,
                 done = false,
-                dueDate = SimpleDateFormat("yyyy-MM-dd").format(System.currentTimeMillis())
+                dueDate = "2026-01-30"
             )
             tasklist = addTask(tasklist, newTask)
         }) {
